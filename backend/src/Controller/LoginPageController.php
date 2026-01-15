@@ -43,6 +43,8 @@ final class LoginPageController extends AbstractController
             'mail' => $user->getMail(),
         ]);
 
+        $session->set('last_activity', time());
+
         $jwt = JWT::encode([
             'userId' => $user->getId(),
             'mail' => $user->getMail(),
