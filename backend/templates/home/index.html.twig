@@ -3,44 +3,33 @@
 {% block title %}Accueil - Talaria{% endblock %}
 
 {% block body %}
-<style>
-    .container { margin: 1em auto; max-width: 900px; width: 95%; font: 16px/1.5 sans-serif; }
-    h1, h2 { color: #2c3e50; }
-    ul { list-style-type: none; padding: 0; }
-    li { background: #ecf0f1; margin-bottom: 8px; padding: 8px; border-radius: 4px; }
-</style>
-
 <div class="container">
     <h1>Bienvenue sur Talaria</h1>
 
-    {# Section Places #}
-    <h2>Liste des lieux</h2>
-    <ul>
-        {% for place in places %}
-            <li>
-                <strong>{{ place.name }}</strong> - 
-                {{ place.description ?: 'Pas de description' }}<br>
-                Prix : {{ place.price ?: 'N/A' }} $<br>
-                Coordonnées : {{ place.latitude }}, {{ place.longitude }}<br>
-                Tags : {{ place.tags|join(', ') }}
-            </li>
-        {% else %}
-            <li>Aucun lieu trouvé</li>
-        {% endfor %}
-    </ul>
+    {% if user %}
+        <p>Bonjour {{ user.mail }}</p>
 
-    {# Section Trips #}
-    <h2>Liste des voyages</h2>
-    <ul>
-        {% for trip in trips %}
-            <li>
-                <strong>{{ trip.destination }}</strong><br>
-                Du {{ trip.dateStart|date('d/m/Y') }} au {{ trip.dateEnd|date('d/m/Y') }}<br>
-                Budget total : ${{ trip.budgetTotal }}
-            </li>
-        {% else %}
-            <li>Aucun voyage trouvé</li>
-        {% endfor %}
-    </ul>
+        <a href="{{ path('app_dashboard') }}"
+           style="padding:8px 12px; background:#3498db; color:white; border-radius:4px;">
+            Dashboard
+        </a>
+
+        <a href="{{ path('app_logout') }}"
+           style="padding:8px 12px; background:#e74c3c; color:white; border-radius:4px;">
+            Déconnexion
+        </a>
+
+    {% else %}
+        <a href="{{ path('app_register') }}"
+           style="padding:8px 12px; background:#2ecc71; color:white; border-radius:4px;">
+            S'inscrire
+        </a>
+
+        <a href="{{ path('app_login') }}"
+           style="padding:8px 12px; background:#3498db; color:white; border-radius:4px;">
+            Se connecter
+        </a>
+    {% endif %}
+
 </div>
 {% endblock %}

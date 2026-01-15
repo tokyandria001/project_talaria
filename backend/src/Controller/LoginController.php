@@ -14,7 +14,7 @@ final class LoginController extends AbstractController
 {
     private string $jwtSecret = 'tldfghuyg26575fdszdcvghgf';
 
-    #[Route('/api/login', name: 'api_login', methods: ['POST'])]
+    #[Route('api/login', name: 'api_login', methods: ['POST'])]
     public function login(
         Request $request,
         InscriptionRepository $repo

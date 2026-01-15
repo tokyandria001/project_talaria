@@ -10,6 +10,17 @@
     <input name="lastname" placeholder="Nom" required>
     <input name="mail" type="email" placeholder="Email" required>
     <input name="password" type="password" placeholder="Mot de passe" required>
+    <input name="phone" placeholder="Téléphone (optionnel)">
+    
+    <label>Budget (séparé par des virgules) :</label>
+    <input name="budget" placeholder="Ex : 1000,2000,3000">
+
+    <label>Activités (séparé par des virgules) :</label>
+    <input name="activity" placeholder="Ex : ski,rando,plage">
+
+    <label>Alimentation (séparé par des virgules) :</label>
+    <input name="food" placeholder="Ex : vegan,gluten-free,pescatarian">
+
     <button>S'inscrire</button>
 </form>
 
@@ -20,11 +31,17 @@ document.getElementById('register-form').addEventListener('submit', async e => {
     e.preventDefault();
 
     const form = e.target;
+
+    // Convertir les champs séparés par des virgules en tableau
     const data = {
         firstname: form.firstname.value,
         lastname: form.lastname.value,
         mail: form.mail.value,
-        password: form.password.value
+        password: form.password.value,
+        phone: form.phone.value || null,
+        budget: form.budget.value ? form.budget.value.split(',').map(s => s.trim()) : [],
+        activity: form.activity.value ? form.activity.value.split(',').map(s => s.trim()) : [],
+        food: form.food.value ? form.food.value.split(',').map(s => s.trim()) : []
     };
 
     const res = await fetch('/api/register', {

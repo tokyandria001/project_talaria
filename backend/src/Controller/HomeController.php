@@ -7,20 +7,15 @@ use App\Repository\TripRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(PlaceRepository $placeRepository, TripRepository $tripRepository): Response
+    public function index(SessionInterface $session): Response
     {
-        $places = $placeRepository->findAll();
-        $trips = $tripRepository->findAll();
-
         return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
-            'places' => $places,
-            'trips' => $trips,
+            'user' => $session->get('user')
         ]);
     }
-
 }

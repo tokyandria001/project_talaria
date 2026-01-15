@@ -9,12 +9,13 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Hello ! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/toky8/Desktop/talaria/backend/src/Controller/LoginController.php</code></li>
-        <li>Your template at <code>C:/Users/toky8/Desktop/talaria/backend/templates/login/index.html.twig</code></li>
-    </ul>
+    <form action="{{ path('app_login') }}" method="POST">
+        <input type="email" name="mail" required>
+        <input type="password" name="password" required>
+        <button type="submit">Se connecter</button>
+    </form>
+
 </div>
 {% endblock %}
