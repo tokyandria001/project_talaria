@@ -8,14 +8,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 final class LoginPageController extends AbstractController
 {
     private string $jwtSecret = 'tldfghuyg26575fdszdcvghgf';
 
     #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
-    public function index(Request $request, InscriptionRepository $repo, SessionInterface $session): Response
+    public function index(Request $request, InscriptionRepository $repo): Response
     {
         if ($request->isMethod('GET')) {
             return $this->render('login/index.html.twig');
@@ -31,20 +30,19 @@ final class LoginPageController extends AbstractController
         }
 
         $user = $repo->findOneBy(['mail' => $mail]);
+
         if (!$user || !password_verify($password, $user->getPassword())) {
             return $this->render('login/index.html.twig', [
                 'error' => 'Identifiants incorrects'
             ]);
         }
 
-        $session->set('user', [
-            'id' => $user->getId(),
-            'firstname' => $user->getFirstname(),
-            'mail' => $user->getMail(),
-        ]);
-
+        // ✅ SESSION (on stocke UNIQUEMENT l’ID)
+        $session = $request->getSession();
+        $session->set('user_id', $user->getId());
         $session->set('last_activity', time());
 
+        // (Optionnel) JWT si besoin plus tard
         $jwt = JWT::encode([
             'userId' => $user->getId(),
             'mail' => $user->getMail(),
