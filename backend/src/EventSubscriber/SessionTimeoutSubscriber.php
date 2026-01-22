@@ -36,9 +36,14 @@ class SessionTimeoutSubscriber implements EventSubscriberInterface
         }
 
         $request = $event->getRequest();
+
+        if (!$request->hasSession()) {
+            return;
+        }
+
         $session = $request->getSession();
 
-        if (!$session || !$session->has('user')) {
+        if (!$session->has('user_id')) {
             return;
         }
 

@@ -42,7 +42,7 @@ final class RegisterPageController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            return $this->render('register/index.html.twig', ['success' => "Inscription réussie 🎉"]);
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('register/index.html.twig');
