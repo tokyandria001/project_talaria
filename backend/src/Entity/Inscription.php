@@ -38,6 +38,10 @@ class Inscription
     #[ORM\Column(type: Types::SIMPLE_ARRAY)]
     private array $food = [];
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $profilePicture = null;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -136,6 +140,17 @@ class Inscription
     {
         $this->food = $food;
 
+        return $this;
+    }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(?string $profilePicture): static
+    {
+        $this->profilePicture = $profilePicture;
         return $this;
     }
 }

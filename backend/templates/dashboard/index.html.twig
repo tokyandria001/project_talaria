@@ -6,6 +6,12 @@
 <div class="container">
     <h1>Dashboard</h1>
 
+    {% if user.profilePicture %}
+    <img src="{{ asset('uploads/profile/' ~ user.profilePicture) }}" width="120" alt="Photo de profil">
+    {% else %}
+        <p>Aucune photo</p>
+    {% endif %}
+
     <p><strong>Prénom :</strong> {{ user.firstname }}</p>
     <p><strong>Nom :</strong> {{ user.lastname }}</p>
     <p><strong>Email :</strong> {{ user.mail }}</p>
@@ -15,11 +21,14 @@
 
     <h2>Modifier mes informations</h2>
 
-    <form method="post" action="{{ path('app_dashboard_update') }}">
+    <form method="post" action="{{ path('app_dashboard_update') }}" enctype="multipart/form-data">
         <input name="firstname" value="{{ user.firstname }}" required>
         <input name="lastname" value="{{ user.lastname }}" required>
         <input type="email" name="mail" value="{{ user.mail }}" required>
         <input name="phone" value="{{ user.phone }}">
+
+        <input type="file" name="profile_picture" accept="image/*">
+
         <button type="submit">Mettre à jour</button>
     </form>
 

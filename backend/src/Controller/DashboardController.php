@@ -42,13 +42,33 @@ final class DashboardController extends AbstractController
 
         $user = $repo->find($userId);
 
-        $user->setFirstname($request->request->get('firstname'));
-        $user->setLastname($request->request->get('lastname'));
-        $user->setMail($request->request->get('mail'));
-        $user->setPhone($request->request->get('phone'));
+        // ⚠️ fallback si les champs manquent
+        $user->setFirstname($request->request->get('firstname', $user->getFirstname()));
+        $user->setLastname($request->request->get('lastname', $user->getLastname()));
+        $user->setMail($request->request->get('mail', $user->getMail()));
+        $user->setPhone($request->request->get('phone', $user->getPhone()));
 
+        // Upload photo de profil
+        $file = $request->files->get('profile_picture');
+
+        if ($file) {
+            $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/profile';
+
+            // Crée le dossier si inexistant
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            // Nom unique + extension correcte
+            $newFilename = uniqid('profile_', true) . '.' . $file->guessExtension();
+
+            $file->move($uploadDir, $newFilename);
+
+            $user->setProfilePicture($newFilename);
+        }
         $em->flush();
 
         return $this->redirectToRoute('app_dashboard');
     }
+
 }
