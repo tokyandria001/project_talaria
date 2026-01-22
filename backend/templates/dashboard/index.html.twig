@@ -3,11 +3,11 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="container dashboard-page">
     <h1>Dashboard</h1>
 
     {% if user.profilePicture %}
-    <img src="{{ asset('uploads/profile/' ~ user.profilePicture) }}" width="120" alt="Photo de profil">
+        <img src="{{ asset('uploads/profile/' ~ user.profilePicture) }}" class="profile-picture" alt="Photo de profil">
     {% else %}
         <p>Aucune photo</p>
     {% endif %}
@@ -20,28 +20,18 @@
     <hr>
 
     <h2>Modifier mes informations</h2>
-
     <form method="post" action="{{ path('app_dashboard_update') }}" enctype="multipart/form-data">
         <input name="firstname" value="{{ user.firstname }}" required>
         <input name="lastname" value="{{ user.lastname }}" required>
         <input type="email" name="mail" value="{{ user.mail }}" required>
         <input name="phone" value="{{ user.phone }}">
-
         <input type="file" name="profile_picture" accept="image/*">
-
         <button type="submit">Mettre à jour</button>
     </form>
 
     <hr>
 
-    <a href="{{ path('app_logout') }}"
-       style="padding: 8px 12px; background: #e74c3c; color: white; text-decoration: none; border-radius: 4px;">
-        Se déconnecter
-    </a>
-
-    <a href="{{ path('app_home') }}"
-       style="padding: 8px 12px; background: #3498db; color: white; text-decoration: none; border-radius: 4px;">
-        Accueil
-    </a>
+    <a href="{{ path('app_logout') }}" class="btn btn-danger">Se déconnecter</a>
+    <a href="{{ path('app_home') }}" class="btn btn-primary">Accueil</a>
 </div>
 {% endblock %}
