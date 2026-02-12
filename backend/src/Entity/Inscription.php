@@ -5,9 +5,10 @@ namespace App\Entity;
 use App\Repository\InscriptionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: InscriptionRepository::class)]
-class Inscription
+class Inscription implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -38,8 +39,8 @@ class Inscription
     #[ORM\Column(type: Types::SIMPLE_ARRAY)]
     private array $food = [];
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $profilePicture = null;
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
 
     public function getId(): ?int
@@ -143,14 +144,29 @@ class Inscription
         return $this;
     }
 
-    public function getProfilePicture(): ?string
+    public function getRoles(): array
     {
-        return $this->profilePicture;
+        $roles = $this->roles;
+
+        // obligatoire : chaque user doit avoir au moins ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
-    public function setProfilePicture(?string $profilePicture): static
+    public function setRoles(array $roles): static
     {
-        $this->profilePicture = $profilePicture;
+        $this->roles = $roles;
         return $this;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->mail;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // rien à faire ici
     }
 }

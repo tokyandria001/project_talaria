@@ -11,7 +11,11 @@
         <div class="flash-error">{{ message }}</div>
     {% endfor %}
 
-    <h1>Inscription</h1>
+{% if error is defined %}
+    <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+<h1>Inscription</h1>
 
     <form id="register-form" enctype="multipart/form-data">
         <input name="firstname" placeholder="Prénom" required>
@@ -19,7 +23,6 @@
         <input name="mail" type="email" placeholder="Email" required>
         <input name="password" type="password" placeholder="Mot de passe" required>
         <input name="phone" placeholder="Téléphone (optionnel)">
-        <input type="file" name="profile_picture" accept="image/*">
 
         <label>Budget (séparé par des virgules) :</label>
         <input name="budget" placeholder="Ex : 1000,2000,3000">

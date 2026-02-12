@@ -3,35 +3,22 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-<div class="container dashboard-page">
-    <h1>Dashboard</h1>
+<h1>Dashboard</h1>
 
-    {% if user.profilePicture %}
-        <img src="{{ asset('uploads/profile/' ~ user.profilePicture) }}" class="profile-picture" alt="Photo de profil">
-    {% else %}
-        <p>Aucune photo</p>
-    {% endif %}
+<p>Prénom : {{ user.firstname }}</p>
+<p>Nom : {{ user.lastname }}</p>
+<p>Email : {{ user.mail }}</p>
+<p>Téléphone : {{ user.phone }}</p>
 
-    <p><strong>Prénom :</strong> {{ user.firstname }}</p>
-    <p><strong>Nom :</strong> {{ user.lastname }}</p>
-    <p><strong>Email :</strong> {{ user.mail }}</p>
-    <p><strong>Téléphone :</strong> {{ user.phone }}</p>
+<h2>Modifier mes informations</h2>
 
-    <hr>
+<form method="post" action="{{ path('app_dashboard_update') }}">
+    <input name="firstname" value="{{ user.firstname }}" required>
+    <input name="lastname" value="{{ user.lastname }}" required>
+    <input type="email" name="mail" value="{{ user.mail }}" required>
+    <input name="phone" value="{{ user.phone }}">
+    <button type="submit">Mettre à jour</button>
+</form>
 
-    <h2>Modifier mes informations</h2>
-    <form method="post" action="{{ path('app_dashboard_update') }}" enctype="multipart/form-data">
-        <input name="firstname" value="{{ user.firstname }}" required>
-        <input name="lastname" value="{{ user.lastname }}" required>
-        <input type="email" name="mail" value="{{ user.mail }}" required>
-        <input name="phone" value="{{ user.phone }}">
-        <input type="file" name="profile_picture" accept="image/*">
-        <button type="submit">Mettre à jour</button>
-    </form>
-
-    <hr>
-
-    <a href="{{ path('app_logout') }}" class="btn btn-danger">Se déconnecter</a>
-    <a href="{{ path('app_home') }}" class="btn btn-primary">Accueil</a>
-</div>
+<a href="{{ path('app_logout') }}">Se déconnecter</a>
 {% endblock %}
