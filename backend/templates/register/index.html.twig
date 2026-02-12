@@ -3,56 +3,65 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-<h1>Inscription</h1>
+<div class="container register-page">
+    {% for message in app.flashes('success') %}
+        <div class="flash-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="flash-error">{{ message }}</div>
+    {% endfor %}
 
-<form id="register-form">
-    <input name="firstname" placeholder="Prénom" required>
-    <input name="lastname" placeholder="Nom" required>
-    <input name="mail" type="email" placeholder="Email" required>
-    <input name="password" type="password" placeholder="Mot de passe" required>
-    <input name="phone" placeholder="Téléphone (optionnel)">
-    
-    <label>Budget (séparé par des virgules) :</label>
-    <input name="budget" placeholder="Ex : 1000,2000,3000">
+    <h1>Inscription</h1>
 
-    <label>Activités (séparé par des virgules) :</label>
-    <input name="activity" placeholder="Ex : ski,rando,plage">
+    <form id="register-form" enctype="multipart/form-data">
+        <input name="firstname" placeholder="Prénom" required>
+        <input name="lastname" placeholder="Nom" required>
+        <input name="mail" type="email" placeholder="Email" required>
+        <input name="password" type="password" placeholder="Mot de passe" required>
+        <input name="phone" placeholder="Téléphone (optionnel)">
+        <input type="file" name="profile_picture" accept="image/*">
 
-    <label>Alimentation (séparé par des virgules) :</label>
-    <input name="food" placeholder="Ex : vegan,gluten-free,pescatarian">
+        <label>Budget (séparé par des virgules) :</label>
+        <input name="budget" placeholder="Ex : 1000,2000,3000">
 
-    <button>S'inscrire</button>
-</form>
+        <label>Activités (séparé par des virgules) :</label>
+        <input name="activity" placeholder="Ex : ski,rando,plage">
 
-<p id="message"></p>
+        <label>Alimentation (séparé par des virgules) :</label>
+        <input name="food" placeholder="Ex : vegan,gluten-free,pescatarian">
 
-<script>
-document.getElementById('register-form').addEventListener('submit', async e => {
-    e.preventDefault();
+        <button type="submit">S'inscrire</button>
+    </form>
 
-    const form = e.target;
+    <p id="message"></p>
 
-    // Convertir les champs séparés par des virgules en tableau
-    const data = {
-        firstname: form.firstname.value,
-        lastname: form.lastname.value,
-        mail: form.mail.value,
-        password: form.password.value,
-        phone: form.phone.value || null,
-        budget: form.budget.value ? form.budget.value.split(',').map(s => s.trim()) : [],
-        activity: form.activity.value ? form.activity.value.split(',').map(s => s.trim()) : [],
-        food: form.food.value ? form.food.value.split(',').map(s => s.trim()) : []
-    };
+    <script>
+    document.getElementById('register-form').addEventListener('submit', async e => {
+        e.preventDefault();
 
-    const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        const form = e.target;
+
+        const data = {
+            firstname: form.firstname.value,
+            lastname: form.lastname.value,
+            mail: form.mail.value,
+            password: form.password.value,
+            phone: form.phone.value || null,
+            budget: form.budget.value ? form.budget.value.split(',').map(s => s.trim()) : [],
+            activity: form.activity.value ? form.activity.value.split(',').map(s => s.trim()) : [],
+            food: form.food.value ? form.food.value.split(',').map(s => s.trim()) : []
+        };
+
+        const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const json = await res.json();
+        document.getElementById('message').innerText =
+            res.ok ? 'Inscription réussie 🎉' : json.error;
     });
-
-    const json = await res.json();
-    document.getElementById('message').innerText =
-        res.ok ? 'Inscription réussie 🎉' : json.error;
-});
-</script>
+    </script>
+</div>
 {% endblock %}
