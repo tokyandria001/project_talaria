@@ -14,11 +14,8 @@ final class HomeController extends AbstractController
         // Récupère l'utilisateur via le Security Context
         $user = $this->getUser();
 
-        $mapboxToken = $this->getParameter('mapbox_token');
-
         return $this->render('home/index.html.twig', [
             'user' => $user,
-            'mapbox_token' => $mapboxToken,
         ]);
     }
 }

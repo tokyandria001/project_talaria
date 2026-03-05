@@ -195,14 +195,13 @@
         }
     }
 
-    .mapboxgl-popup-content {
-        background: rgba(26, 26, 26, 0.95);
-        color: white;
-        border: 1px solid rgba(52, 152, 219, 0.5);
-        border-radius: 8px;
+    .maplibregl-popup-content {
+    background: rgba(26, 26, 26, 0.95);
+    color: white;
+    border: 1px solid rgba(52, 152, 219, 0.5);
+    border-radius: 8px;
     }
-
-    .mapboxgl-popup-close-button {
+    .maplibregl-popup-close-button {
         color: white;
     }
 
@@ -292,77 +291,57 @@
 
         <!-- Mapbox Script -->
         <script>
-            mapboxgl.accessToken = '{{ mapbox_token }}';
             
-            const map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/dark-v11',
-                center: [2.3522, 48.8566], // Paris par défaut
-                zoom: 10,
-                pitch: 20,
-                bearing: 0,
-            });
+            
+            const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json', // style sombre gratuit
+    center: [2.3522, 48.8566],
+    zoom: 10,
+    pitch: 20,
+    bearing: 0,
+});
 
-            // Ajouter les contrôles
-            map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-            map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+map.addControl(new maplibregl.NavigationControl(), 'top-right');
+map.addControl(new maplibregl.FullscreenControl(), 'top-right');
 
-            // Exemple de marqueurs
-            const destinations = [
-                {
-                    coordinates: [2.3522, 48.8566],
-                    title: 'Paris',
-                    description: 'La Ville Lumière - 🗼 Musées, monuments et culture'
-                },
-                {
-                    coordinates: [4.8357, 45.7640],
-                    title: 'Lyon',
-                    description: 'Carrefour d\'histoire - 🏰 Confluences et patrimoine'
-                },
-                {
-                    coordinates: [-1.5574, 47.2173],
-                    title: 'Nantes',
-                    description: 'Côté Loire - 🎨 Machines de l\'île et créativité'
-                },
-                {
-                    coordinates: [7.7561, 48.5734],
-                    title: 'Strasbourg',
-                    description: 'Alsace historique - 🎄 Culture franco-allemande'
-                },
-            ];
+const destinations = [
+    { coordinates: [2.3522, 48.8566], title: 'Paris', description: 'La Ville Lumière - 🗼 Musées, monuments et culture' },
+    { coordinates: [4.8357, 45.7640], title: 'Lyon', description: 'Carrefour d\'histoire - 🏰 Confluences et patrimoine' },
+    { coordinates: [-1.5574, 47.2173], title: 'Nantes', description: 'Côté Loire - 🎨 Machines de l\'île et créativité' },
+    { coordinates: [7.7561, 48.5734], title: 'Strasbourg', description: 'Alsace historique - 🎄 Culture franco-allemande' },
+];
 
-            // Créer des marqueurs
-            destinations.forEach(destination => {
-                const el = document.createElement('div');
-                el.style.width = '40px';
-                el.style.height = '40px';
-                el.style.backgroundImage = 'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxOCIgZmlsbD0iIzM0OThkYiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMjAiIHk9IjI2IiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPi8+PC90ZXh0Pjwvc3ZnPg==")';
-                el.style.backgroundSize = '100%';
-                el.style.cursor = 'pointer';
+destinations.forEach(destination => {
+    const el = document.createElement('div');
+    el.style.width = '40px';
+    el.style.height = '40px';
+    el.style.backgroundImage = 'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxOCIgZmlsbD0iIzM0OThkYiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMjAiIHk9IjI2IiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPi8+PC90ZXh0Pjwvc3ZnPg==")';
+    el.style.backgroundSize = '100%';
+    el.style.cursor = 'pointer';
 
-                const popup = new mapboxgl.Popup({ offset: 25 })
-                    .setHTML(`
-                        <div style="padding: 10px;">
-                            <h3 style="margin: 0 0 8px 0; font-size: 1rem;">${destination.title}</h3>
-                            <p style="margin: 0; font-size: 0.9rem; color: #bdc3c7;">${destination.description}</p>
-                        </div>
-                    `);
+    const popup = new maplibregl.Popup({ offset: 25 })
+        .setHTML(`
+            <div style="padding: 10px;">
+                <h3 style="margin: 0 0 8px 0; font-size: 1rem;">${destination.title}</h3>
+                <p style="margin: 0; font-size: 0.9rem; color: #bdc3c7;">${destination.description}</p>
+            </div>
+        `);
 
-                new mapboxgl.Marker(el)
-                    .setLngLat(destination.coordinates)
-                    .setPopup(popup)
-                    .addTo(map);
-            });
+    new maplibregl.Marker(el)
+        .setLngLat(destination.coordinates)
+        .setPopup(popup)
+        .addTo(map);
+});
 
-            // Animation au chargement
-            map.on('load', () => {
-                map.flyTo({
-                    center: [2.3522, 48.8566],
-                    zoom: 6,
-                    duration: 3000,
-                    essential: true
-                });
-            });
+map.on('load', () => {
+    map.flyTo({
+        center: [2.3522, 48.8566],
+        zoom: 6,
+        duration: 3000,
+        essential: true
+    });
+});
         </script>
     {% else %}
         <!-- Section non connecté -->
