@@ -2,27 +2,23 @@
 
 namespace App\Controller;
 
-use App\Repository\InscriptionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(Request $request, InscriptionRepository $repo): Response
+    public function index(): Response
     {
-        $session = $request->getSession();
-        $user = null;
+        // Récupère l'utilisateur via le Security Context
+        $user = $this->getUser();
 
-        if ($session->has('user_id')) {
-            $user = $repo->find($session->get('user_id'));
-        }
+        $mapboxToken = $this->getParameter('mapbox_token');
 
         return $this->render('home/index.html.twig', [
-            'user' => $user
+            'user' => $user,
+            'mapbox_token' => $mapboxToken,
         ]);
     }
 }

@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\PlaceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlaceRepository::class)]
+#[ORM\Table(name: 'places')]
 class Place
 {
     #[ORM\Id]
@@ -17,20 +20,42 @@ class Place
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $price = null;
+    private ?float $avgPrice = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::FLOAT)]
     private ?float $latitude = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::FLOAT)]
     private ?float $longitude = null;
 
-    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
+    #[ORM\Column(type: Types::JSON)]
+    private array $photos = [];
+
+    #[ORM\Column(type: Types::JSON)]
     private array $tags = [];
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'places')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Inscription $createdBy = null;
+
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $views = 0;
+
+    #[ORM\ManyToMany(targetEntity: Inscription::class, inversedBy: 'favoritePlaces')]
+    private Collection $favoritedBy;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->favoritedBy = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -45,7 +70,6 @@ class Place
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -54,22 +78,20 @@ class Place
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getAvgPrice(): ?float
     {
-        return $this->price;
+        return $this->avgPrice;
     }
 
-    public function setPrice(?float $price): static
+    public function setAvgPrice(?float $avgPrice): static
     {
-        $this->price = $price;
-
+        $this->avgPrice = $avgPrice;
         return $this;
     }
 
@@ -81,7 +103,6 @@ class Place
     public function setLatitude(float $latitude): static
     {
         $this->latitude = $latitude;
-
         return $this;
     }
 
@@ -93,7 +114,17 @@ class Place
     public function setLongitude(float $longitude): static
     {
         $this->longitude = $longitude;
+        return $this;
+    }
 
+    public function getPhotos(): array
+    {
+        return $this->photos;
+    }
+
+    public function setPhotos(array $photos): static
+    {
+        $this->photos = $photos;
         return $this;
     }
 
@@ -105,7 +136,57 @@ class Place
     public function setTags(array $tags): static
     {
         $this->tags = $tags;
-
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getCreatedBy(): ?Inscription
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?Inscription $createdBy): static
+    {
+        $this->createdBy = $createdBy;
+        return $this;
+    }
+
+    public function getViews(): int
+    {
+        return $this->views;
+    }
+
+    public function incrementViews(): static
+    {
+        $this->views++;
+        return $this;
+    }
+
+    public function getFavoritedBy(): Collection
+    {
+        return $this->favoritedBy;
+    }
+
+    public function addFavoritedBy(Inscription $user): static
+    {
+        if (!$this->favoritedBy->contains($user)) {
+            $this->favoritedBy->add($user);
+        }
+        return $this;
+    }
+
+    public function removeFavoritedBy(Inscription $user): static
+    {
+        $this->favoritedBy->removeElement($user);
+        return $this;
+    }
+
+    public function isFavoritedBy(Inscription $user): bool
+    {
+        return $this->favoritedBy->contains($user);
     }
 }

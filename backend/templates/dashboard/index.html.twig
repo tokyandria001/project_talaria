@@ -20,5 +20,15 @@
     <button type="submit">Mettre à jour</button>
 </form>
 
-<a href="{{ path('app_logout') }}">Se déconnecter</a>
+<div style="margin-top: 20px;">
+    <a href="{{ path('app_home') }}"
+       style="padding:8px 12px; background:#3498db; color:white; border-radius:4px; text-decoration:none; margin-right:10px;">
+        Accueil
+    </a>
+
+    <a href="{{ path('app_logout') }}"
+       style="padding:8px 12px; background:#e74c3c; color:white; border-radius:4px; text-decoration:none;">
+        Se déconnecter
+    </a>
+</div>
 {% endblock %}

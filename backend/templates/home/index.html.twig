@@ -3,33 +3,385 @@
 {% block title %}Accueil - Talaria{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>Bienvenue sur Talaria</h1>
+<style>
+    :root {
+        --primary: #3498db;
+        --secondary: #2ecc71;
+        --danger: #e74c3c;
+        --dark: #1a1a1a;
+        --light: #f5f5f5;
+    }
 
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        min-height: 100vh;
+    }
+
+    .home-container {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nav-bar {
+        background: rgba(26, 26, 26, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #3498db, #2ecc71);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(52, 152, 219, 0.3);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(46, 204, 113, 0.3);
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(231, 76, 60, 0.3);
+    }
+
+    .user-greeting {
+        padding: 2rem;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .user-greeting h1 {
+        margin: 0;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, #3498db, #2ecc71);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .user-greeting p {
+        margin: 0;
+        color: #bdc3c7;
+        font-size: 1.1rem;
+    }
+
+    .content {
+        flex: 1;
+        padding: 2rem;
+        display: flex;
+        gap: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .welcome-section {
+        flex: 0 0 35%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .welcome-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        animation: slideInLeft 0.6s ease-out;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .welcome-card h2 {
+        margin: 0 0 1rem 0;
+        font-size: 1.5rem;
+    }
+
+    .welcome-card p {
+        margin: 0 0 1.5rem 0;
+        color: #bdc3c7;
+        line-height: 1.6;
+    }
+
+    .welcome-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .map-section {
+        flex: 1;
+        min-height: 500px;
+    }
+
+    #map {
+        width: 100%;
+        height: 100%;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        animation: slideInRight 0.6s ease-out;
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .mapboxgl-popup-content {
+        background: rgba(26, 26, 26, 0.95);
+        color: white;
+        border: 1px solid rgba(52, 152, 219, 0.5);
+        border-radius: 8px;
+    }
+
+    .mapboxgl-popup-close-button {
+        color: white;
+    }
+
+    @media (max-width: 1024px) {
+        .content {
+            flex-direction: column;
+        }
+
+        .welcome-section {
+            flex: 0 0 auto;
+        }
+
+        .map-section {
+            min-height: 400px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .nav-bar {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .content {
+            padding: 1rem;
+        }
+
+        .welcome-card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="home-container">
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="logo">🗺️ Talaria</div>
+        <div class="nav-buttons">
+            {% if user %}
+                <span style="color: #bdc3c7;">{{ user.mail }}</span>
+                <a href="{{ path('app_dashboard') }}" class="btn btn-primary">
+                    Dashboard
+                </a>
+                <a href="{{ path('app_logout') }}" class="btn btn-danger">
+                    Déconnexion
+                </a>
+            {% else %}
+                <a href="{{ path('app_register') }}" class="btn btn-success">
+                    S'inscrire
+                </a>
+                <a href="{{ path('app_login') }}" class="btn btn-primary">
+                    Se connecter
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Welcome Section -->
     {% if user %}
-        <p>Bonjour {{ user.mail }}</p>
+        <div class="user-greeting">
+            <h1>Bienvenue, {{ user.firstname | default(user.mail) }}</h1>
+            <p>Explorez la carte interactive ci-dessous</p>
+        </div>
 
-        <a href="{{ path('app_dashboard') }}"
-           style="padding:8px 12px; background:#3498db; color:white; border-radius:4px;">
-            Dashboard
-        </a>
+        <div class="content">
+            <!-- Left Panel -->
+            <div class="welcome-section">
+                <div class="welcome-card">
+                    <h2>À propos de Talaria</h2>
+                    <p>
+                        Découvrez des destinations fascinantes à travers notre carte interactive. 
+                        Cliquez sur les marqueurs pour en savoir plus sur chaque lieu.
+                    </p>
+                    <div class="welcome-actions">
+                        <a href="{{ path('app_dashboard') }}" class="btn btn-primary">
+                            Mes paramètres
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-        <a href="{{ path('app_logout') }}"
-           style="padding:8px 12px; background:#e74c3c; color:white; border-radius:4px;">
-            Déconnexion
-        </a>
+            <!-- Map Section -->
+            <div class="map-section">
+                <div id="map"></div>
+            </div>
+        </div>
 
+        <!-- Mapbox Script -->
+        <script>
+            mapboxgl.accessToken = '{{ mapbox_token }}';
+            
+            const map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/dark-v11',
+                center: [2.3522, 48.8566], // Paris par défaut
+                zoom: 10,
+                pitch: 20,
+                bearing: 0,
+            });
+
+            // Ajouter les contrôles
+            map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+            map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+
+            // Exemple de marqueurs
+            const destinations = [
+                {
+                    coordinates: [2.3522, 48.8566],
+                    title: 'Paris',
+                    description: 'La Ville Lumière - 🗼 Musées, monuments et culture'
+                },
+                {
+                    coordinates: [4.8357, 45.7640],
+                    title: 'Lyon',
+                    description: 'Carrefour d\'histoire - 🏰 Confluences et patrimoine'
+                },
+                {
+                    coordinates: [-1.5574, 47.2173],
+                    title: 'Nantes',
+                    description: 'Côté Loire - 🎨 Machines de l\'île et créativité'
+                },
+                {
+                    coordinates: [7.7561, 48.5734],
+                    title: 'Strasbourg',
+                    description: 'Alsace historique - 🎄 Culture franco-allemande'
+                },
+            ];
+
+            // Créer des marqueurs
+            destinations.forEach(destination => {
+                const el = document.createElement('div');
+                el.style.width = '40px';
+                el.style.height = '40px';
+                el.style.backgroundImage = 'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxOCIgZmlsbD0iIzM0OThkYiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMjAiIHk9IjI2IiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPi8+PC90ZXh0Pjwvc3ZnPg==")';
+                el.style.backgroundSize = '100%';
+                el.style.cursor = 'pointer';
+
+                const popup = new mapboxgl.Popup({ offset: 25 })
+                    .setHTML(`
+                        <div style="padding: 10px;">
+                            <h3 style="margin: 0 0 8px 0; font-size: 1rem;">${destination.title}</h3>
+                            <p style="margin: 0; font-size: 0.9rem; color: #bdc3c7;">${destination.description}</p>
+                        </div>
+                    `);
+
+                new mapboxgl.Marker(el)
+                    .setLngLat(destination.coordinates)
+                    .setPopup(popup)
+                    .addTo(map);
+            });
+
+            // Animation au chargement
+            map.on('load', () => {
+                map.flyTo({
+                    center: [2.3522, 48.8566],
+                    zoom: 6,
+                    duration: 3000,
+                    essential: true
+                });
+            });
+        </script>
     {% else %}
-        <a href="{{ path('app_register') }}"
-           style="padding:8px 12px; background:#2ecc71; color:white; border-radius:4px;">
-            S'inscrire
-        </a>
-
-        <a href="{{ path('app_login') }}"
-           style="padding:8px 12px; background:#3498db; color:white; border-radius:4px;">
-            Se connecter
-        </a>
+        <!-- Section non connecté -->
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 4rem 2rem;">
+            <h1 style="font-size: 3rem; margin-bottom: 1rem; background: linear-gradient(135deg, #3498db, #2ecc71); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Bienvenue sur Talaria
+            </h1>
+            <p style="font-size: 1.2rem; color: #bdc3c7; margin-bottom: 2rem; max-width: 500px;">
+                Connectez-vous ou créez un compte pour explorer notre carte interactive et découvrir des destinations fascinantes.
+            </p>
+            <div style="display: flex; gap: 1rem;">
+                <a href="{{ path('app_register') }}" class="btn btn-success" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    S'inscrire
+                </a>
+                <a href="{{ path('app_login') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    Se connecter
+                </a>
+            </div>
+        </div>
     {% endif %}
-
 </div>
 {% endblock %}
